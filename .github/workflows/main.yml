@@ -57,3 +57,15 @@ jobs:
           -backend-config=../tf_backend.config \
           -backend-config=key=layer_1_networking 
           terraform apply -auto-approve --var "terraform_remote_state_bucket=${{ env.TERRAFORM_REMOTE_STATE_BUCKET }}"
+
+      - name: Apply Layer 2 Storage
+        working-directory: ./layer_2_storage
+        run: |
+          if [ "${{ github.event.inputs.layer }}" != "all" ] && [ "${{ github.event.inputs.layer }}" != "2" ]; then
+            echo "Skipping Layer 2 Storage deployment"
+            exit 0
+          fi
+          terraform init \
+          -backend-config=../tf_backend.config \
+          -backend-config=key=layer_2_storage 
+          terraform apply -auto-approve --var-file=.vars
