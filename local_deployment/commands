@@ -1,1 +1,1 @@
-./local_deployment/bin/act --secret-file ./.secrets --env-file ./.env
+./local_deployment/bin/act --secret-file ./.secrets --env-file ./.env --input layer=1
