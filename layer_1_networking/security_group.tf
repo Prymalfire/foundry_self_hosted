@@ -1,5 +1,5 @@
 data aws_vpc default {
-    for_each = {for region in var.regions : region => region}
+    for_each = local.regions
     default = true
     region = each.key
 }
@@ -62,4 +62,8 @@ resource "aws_security_group" "foundry_web" {
     tags = {
         Name = "foundry-web-group-${each.key}"
     }
+}
+
+output "security_group_id" {
+    value = {for region, sg in aws_security_group.foundry_web : region => sg.id}
 }
