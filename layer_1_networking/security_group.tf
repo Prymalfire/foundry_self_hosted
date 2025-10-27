@@ -1,8 +1,15 @@
+data aws_vpc default {
+    for_each = {for region in var.regions : region => region}
+    default = true
+    region = each.key
+}
 
 resource "aws_security_group" "foundry_web" {
+    for_each = data.aws_vpc.default
     name        = "foundry-web-server-group"
     description = "Security group for Foundry VTT web servers"
-    vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
+    vpc_id      = data.aws_vpc.default[each.key].id
+    region = each.key
 
     // HTTP
     ingress {
@@ -53,6 +60,6 @@ resource "aws_security_group" "foundry_web" {
     }
 
     tags = {
-        Name = "foundry-web-group"
+        Name = "foundry-web-group-${each.key}"
     }
 }
